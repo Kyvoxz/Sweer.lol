@@ -1,15 +1,21 @@
 --[[
     Kyvwer.lol Remasterized
     Rivals Advanced + Spoofer
-    Silent Aim + Ragebot + Unlock All + Spoofer fuertes
+    Silent Aim + Ragebot + Unlock All + Spoofer
 ]]
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/yenkgg/Sleepy-Hub-UI/refs/heads/main/Library.lua"))()
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-local Window = Library:window({
-    name = "Kyvwer",
-    suffix = "lol",
-    gameInfo = "Remasterized | Rivals"
+local Window = Rayfield:CreateWindow({
+    Name = "Kyvwer.lol | Remasterized",
+    LoadingTitle = "Kyvwer.lol",
+    LoadingSubtitle = "Rivals Advanced",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "Kyvwer",
+        FileName = "Config"
+    },
+    KeySystem = false
 })
 
 -- Services
@@ -56,78 +62,236 @@ getgenv().Spoof = {
 }
 
 -- ==================== TABS ====================
-local Combat = Window:tab("Combat")
-local Movement = Window:tab("Movement")
-local Spoofer = Window:tab("Spoofer")
-local Misc = Window:tab("Misc")
+local CombatTab = Window:CreateTab("Combat", 4483362458)
+local MovementTab = Window:CreateTab("Movement", 4483362458)
+local SpooferTab = Window:CreateTab("Spoofer", 4483362458)
+local MiscTab = Window:CreateTab("Misc", 4483362458)
 
--- Combat
-Combat:toggle({name = "Silent Aim", callback = function(v) getgenv().Settings.SilentAim = v end})
-Combat:toggle({name = "Ragebot", callback = function(v) getgenv().Settings.Ragebot = v end})
-Combat:toggle({name = "Aimbot", callback = function(v) getgenv().Settings.Aimbot = v end})
-Combat:toggle({name = "Aim Assist", callback = function(v) getgenv().Settings.AimAssist = v end})
-Combat:slider({name = "Aim Assist Strength", min = 0.1, max = 1, default = 0.6, callback = function(v) getgenv().Settings.AimAssistStrength = v end})
-Combat:toggle({name = "Hitbox Expander", callback = function(v) getgenv().Settings.HitboxExpander = v end})
-Combat:slider({name = "Hitbox Size", min = 5, max = 40, default = 16, callback = function(v) getgenv().Settings.HitboxSize = v end})
-Combat:toggle({name = "Spinbot", callback = function(v) getgenv().Settings.Spinbot = v end})
-Combat:slider({name = "Spinbot Speed", min = 10, max = 60, default = 32, callback = function(v) getgenv().Settings.SpinbotSpeed = v end})
-Combat:slider({name = "FOV", min = 50, max = 1200, default = 260, callback = function(v) getgenv().Settings.FOV = v end})
-Combat:slider({name = "Prediction", min = 0, max = 0.5, default = 0.21, callback = function(v) getgenv().Settings.Prediction = v end})
-Combat:dropdown({name = "Aim Part", options = {"Head", "HumanoidRootPart", "UpperTorso"}, default = "Head", callback = function(v) getgenv().Settings.AimPart = v end})
+-- ===== COMBAT =====
+CombatTab:CreateToggle({
+    Name = "Silent Aim",
+    CurrentValue = false,
+    Flag = "SilentAim",
+    Callback = function(v) getgenv().Settings.SilentAim = v end
+})
 
--- Movement
-Movement:toggle({name = "Speed", callback = function(v) getgenv().Settings.Speed = v end})
-Movement:slider({name = "Speed Value", min = 16, max = 400, default = 100, callback = function(v) getgenv().Settings.SpeedValue = v end})
-Movement:toggle({name = "Infinite Jump", callback = function(v) getgenv().Settings.InfiniteJump = v end})
-Movement:toggle({name = "Noclip", callback = function(v) getgenv().Settings.Noclip = v end})
-Movement:toggle({name = "Fullbright", callback = function(v) getgenv().Settings.Fullbright = v end})
+CombatTab:CreateToggle({
+    Name = "Ragebot",
+    CurrentValue = false,
+    Flag = "Ragebot",
+    Callback = function(v) getgenv().Settings.Ragebot = v end
+})
 
--- Spoofer
-Spoofer:toggle({name = "Activar Spoofer", callback = function(v) getgenv().Spoof.Enabled = v end})
-Spoofer:textbox({name = "Rango", default = "Radiant", callback = function(v) getgenv().Spoof.Rank = v end})
-Spoofer:textbox({name = "Nivel", default = "999", callback = function(v) getgenv().Spoof.Level = tonumber(v) or 999 end})
-Spoofer:textbox({name = "Racha", default = "100", callback = function(v) getgenv().Spoof.Streak = tonumber(v) or 0 end})
-Spoofer:textbox({name = "Nombre Spoof", callback = function(v) getgenv().Spoof.DisplayName = v end})
+CombatTab:CreateToggle({
+    Name = "Aimbot",
+    CurrentValue = false,
+    Flag = "Aimbot",
+    Callback = function(v) getgenv().Settings.Aimbot = v end
+})
 
--- Misc
-Misc:toggle({name = "Unlock All", callback = function(v)
-    getgenv().Settings.UnlockAll = v
-    if v then
-        pcall(function()
-            for _, tbl in pairs(getgc(true)) do
-                if typeof(tbl) == "table" then
-                    if rawget(tbl, "Unlocked") then rawset(tbl, "Unlocked", true) end
-                    if rawget(tbl, "Owned") then rawset(tbl, "Owned", true) end
-                    if rawget(tbl, "IsOwned") then rawset(tbl, "IsOwned", true) end
-                    if rawget(tbl, "HasItem") then rawset(tbl, "HasItem", true) end
-                    if rawget(tbl, "UnlockedSkins") and typeof(tbl.UnlockedSkins) == "table" then
-                        for k in pairs(tbl.UnlockedSkins) do
-                            tbl.UnlockedSkins[k] = true
+CombatTab:CreateToggle({
+    Name = "Aim Assist",
+    CurrentValue = false,
+    Flag = "AimAssist",
+    Callback = function(v) getgenv().Settings.AimAssist = v end
+})
+
+CombatTab:CreateSlider({
+    Name = "Aim Assist Strength",
+    Range = {0.1, 1},
+    Increment = 0.05,
+    CurrentValue = 0.6,
+    Flag = "AimAssistStrength",
+    Callback = function(v) getgenv().Settings.AimAssistStrength = v end
+})
+
+CombatTab:CreateToggle({
+    Name = "Hitbox Expander",
+    CurrentValue = false,
+    Flag = "HitboxExpander",
+    Callback = function(v) getgenv().Settings.HitboxExpander = v end
+})
+
+CombatTab:CreateSlider({
+    Name = "Hitbox Size",
+    Range = {5, 40},
+    Increment = 1,
+    CurrentValue = 16,
+    Flag = "HitboxSize",
+    Callback = function(v) getgenv().Settings.HitboxSize = v end
+})
+
+CombatTab:CreateToggle({
+    Name = "Spinbot",
+    CurrentValue = false,
+    Flag = "Spinbot",
+    Callback = function(v) getgenv().Settings.Spinbot = v end
+})
+
+CombatTab:CreateSlider({
+    Name = "Spinbot Speed",
+    Range = {10, 60},
+    Increment = 1,
+    CurrentValue = 32,
+    Flag = "SpinbotSpeed",
+    Callback = function(v) getgenv().Settings.SpinbotSpeed = v end
+})
+
+CombatTab:CreateSlider({
+    Name = "FOV",
+    Range = {50, 1200},
+    Increment = 10,
+    CurrentValue = 260,
+    Flag = "FOV",
+    Callback = function(v) getgenv().Settings.FOV = v end
+})
+
+CombatTab:CreateSlider({
+    Name = "Prediction",
+    Range = {0, 0.5},
+    Increment = 0.01,
+    CurrentValue = 0.21,
+    Flag = "Prediction",
+    Callback = function(v) getgenv().Settings.Prediction = v end
+})
+
+CombatTab:CreateDropdown({
+    Name = "Aim Part",
+    Options = {"Head", "HumanoidRootPart", "UpperTorso"},
+    CurrentOption = "Head",
+    Flag = "AimPart",
+    Callback = function(v) getgenv().Settings.AimPart = v end
+})
+
+-- ===== MOVEMENT =====
+MovementTab:CreateToggle({
+    Name = "Speed",
+    CurrentValue = false,
+    Flag = "Speed",
+    Callback = function(v) getgenv().Settings.Speed = v end
+})
+
+MovementTab:CreateSlider({
+    Name = "Speed Value",
+    Range = {16, 400},
+    Increment = 5,
+    CurrentValue = 100,
+    Flag = "SpeedValue",
+    Callback = function(v) getgenv().Settings.SpeedValue = v end
+})
+
+MovementTab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Flag = "InfiniteJump",
+    Callback = function(v) getgenv().Settings.InfiniteJump = v end
+})
+
+MovementTab:CreateToggle({
+    Name = "Noclip",
+    CurrentValue = false,
+    Flag = "Noclip",
+    Callback = function(v) getgenv().Settings.Noclip = v end
+})
+
+MovementTab:CreateToggle({
+    Name = "Fullbright",
+    CurrentValue = false,
+    Flag = "Fullbright",
+    Callback = function(v) getgenv().Settings.Fullbright = v end
+})
+
+-- ===== SPOOFER =====
+SpooferTab:CreateToggle({
+    Name = "Activar Spoofer",
+    CurrentValue = false,
+    Flag = "SpoofEnabled",
+    Callback = function(v) getgenv().Spoof.Enabled = v end
+})
+
+SpooferTab:CreateInput({
+    Name = "Rango",
+    PlaceholderText = "Radiant",
+    CurrentValue = "Radiant",
+    Flag = "SpoofRank",
+    Callback = function(v) getgenv().Spoof.Rank = v end
+})
+
+SpooferTab:CreateInput({
+    Name = "Nivel",
+    PlaceholderText = "999",
+    CurrentValue = "999",
+    Flag = "SpoofLevel",
+    Callback = function(v) getgenv().Spoof.Level = tonumber(v) or 999 end
+})
+
+SpooferTab:CreateInput({
+    Name = "Racha",
+    PlaceholderText = "100",
+    CurrentValue = "100",
+    Flag = "SpoofStreak",
+    Callback = function(v) getgenv().Spoof.Streak = tonumber(v) or 0 end
+})
+
+SpooferTab:CreateInput({
+    Name = "Nombre Spoof",
+    PlaceholderText = "Tu nombre",
+    CurrentValue = "",
+    Flag = "SpoofName",
+    Callback = function(v) getgenv().Spoof.DisplayName = v end
+})
+
+-- ===== MISC =====
+MiscTab:CreateToggle({
+    Name = "Unlock All",
+    CurrentValue = false,
+    Flag = "UnlockAll",
+    Callback = function(v)
+        getgenv().Settings.UnlockAll = v
+        if v then
+            pcall(function()
+                for _, tbl in pairs(getgc(true)) do
+                    if typeof(tbl) == "table" then
+                        if rawget(tbl, "Unlocked") then rawset(tbl, "Unlocked", true) end
+                        if rawget(tbl, "Owned") then rawset(tbl, "Owned", true) end
+                        if rawget(tbl, "IsOwned") then rawset(tbl, "IsOwned", true) end
+                        if rawget(tbl, "HasItem") then rawset(tbl, "HasItem", true) end
+                        if rawget(tbl, "UnlockedSkins") and typeof(tbl.UnlockedSkins) == "table" then
+                            for k in pairs(tbl.UnlockedSkins) do
+                                tbl.UnlockedSkins[k] = true
+                            end
                         end
                     end
                 end
-            end
-        end)
-        Library:notify("Unlock All", "Intentando desbloquear todo...")
-    end
-end})
-
-Misc:toggle({name = "Anti AFK", default = true, callback = function(v) getgenv().Settings.AntiAFK = v end})
-
-Misc:button({
-    name = "PANIC",
-    callback = function()
-        for k,v in pairs(getgenv().Settings) do
-            if type(v) == "boolean" then getgenv().Settings[k] = false end
+            end)
+            Rayfield:Notify({Title = "Unlock All", Content = "Intentando desbloquear todo...", Duration = 3})
         end
-        getgenv().Spoof.Enabled = false
-        Library:notify("PANIC", "Todo desactivado")
     end
 })
 
-Misc:button({
-    name = "Server Hopper",
-    callback = function()
+MiscTab:CreateToggle({
+    Name = "Anti AFK",
+    CurrentValue = true,
+    Flag = "AntiAFK",
+    Callback = function(v) getgenv().Settings.AntiAFK = v end
+})
+
+MiscTab:CreateButton({
+    Name = "PANIC (Apagar todo)",
+    Callback = function()
+        for k, v in pairs(getgenv().Settings) do
+            if type(v) == "boolean" then
+                getgenv().Settings[k] = false
+            end
+        end
+        getgenv().Spoof.Enabled = false
+        Rayfield:Notify({Title = "PANIC", Content = "Todo desactivado", Duration = 4})
+    end
+})
+
+MiscTab:CreateButton({
+    Name = "Server Hopper",
+    Callback = function()
         pcall(function()
             local data = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..game.PlaceId.."/servers/Public?sortOrder=Asc&limit=100"))
             for _, server in ipairs(data.data) do
@@ -152,7 +316,7 @@ local function GetClosestPlayer()
                 local pos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 if onScreen then
                     local dist = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).Magnitude
-                    if dist < shortest and math.random(1,100) <= getgenv().Settings.HitChance then
+                    if dist < shortest and math.random(1, 100) <= getgenv().Settings.HitChance then
                         shortest = dist
                         closest = player
                     end
@@ -191,7 +355,9 @@ end))
 UserInputService.JumpRequest:Connect(function()
     if getgenv().Settings.InfiniteJump and LocalPlayer.Character then
         local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+        if hum then
+            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
     end
 end)
 
@@ -208,7 +374,9 @@ RunService.Heartbeat:Connect(function()
 
     if getgenv().Settings.Noclip then
         for _, part in ipairs(char:GetDescendants()) do
-            if part:IsA("BasePart") then part.CanCollide = false end
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
         end
     end
 
@@ -292,5 +460,10 @@ task.spawn(function()
     end
 end)
 
-Library:notify("Kyvwer.lol", "Remasterized cargado")
-print("Kyvwer.lol Remasterized cargado correctamente")
+Rayfield:Notify({
+    Title = "Kyvwer.lol",
+    Content = "Remasterized cargado correctamente",
+    Duration = 5
+})
+
+print("Kyvwer.lol Remasterized cargado")
